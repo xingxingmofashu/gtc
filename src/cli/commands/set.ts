@@ -2,6 +2,7 @@ import { cmd } from "../utils/cmd"
 import { log, autocomplete, group, type Option, intro, outro, text } from "@clack/prompts"
 import { useConfig } from "../../config"
 import { CONFIGURATIONS } from "../../config/constants"
+import { UI } from "../utils/ui"
 
 export const SetCommand = cmd({
   command: "set",
@@ -27,7 +28,7 @@ export const SetCommand = cmd({
 
       const { set } = useConfig()
       await set(key, value)
-      log.success(`Configuration ${key} set to ${value}`)
+      log.success(`Configuration ${UI.Style.TEXT_HIGHLIGHT}${key}${UI.Style.TEXT_END} set to ${UI.Style.TEXT_SUCCESS}${value}${UI.Style.TEXT_END}`)
     } catch (error) {
       log.error(`${error instanceof Error ? error.message : "An unknown error occurred"}`)
     }

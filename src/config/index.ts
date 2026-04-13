@@ -41,8 +41,15 @@ export function useConfig() {
     if (!(await file.exists())) {
       await file.write("")
     }
-    const content = await file.text()
-    await file.write(content + `\n${key} = ${value}`)
+    const content = (await file.text()).split("\n").filter(Boolean)
+    const index = content.findIndex((line) => line.startsWith(`${key}`))
+    if (index !== -1) {
+      content[index] = `${key} = ${value}`
+      await file.write(content.join("\n"))
+    } else {
+      content.push(`${key} = ${value}`)
+      await file.write(content.join("\n"))
+    }
   }
 
   return {

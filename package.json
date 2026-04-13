@@ -1,6 +1,6 @@
 {
   "name": "ghostty-config",
-  "description": "",
+  "description": "ghostty configuration CLI tool",
   "type": "module",
   "private": true,
   "version": "0.1.0",
