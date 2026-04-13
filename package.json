@@ -1,0 +1,17 @@
+{
+  "name": "ghostty-config",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev":"bun run src/index.ts"
+  },
+  "dependencies": {
+    "yargs": "^18.0.0"
+  },
+  "devDependencies": {
+    "@tsconfig/bun": "1.0.10",
+    "@types/bun": "1.3.12",
+    "@types/yargs": "^17.0.35",
+    "typescript": "6.0.2"
+  }
+}
