@@ -1,6 +1,8 @@
 import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import pkg from "../package.json"
+import { ListCommand } from "./cli/commands/list"
+import { SetCommand } from "./cli/commands/set"
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
@@ -10,6 +12,8 @@ const cli = yargs(hideBin(process.argv))
   .alias("h", ["help"])
   .version("version", pkg.version)
   .alias("v", ["version"])
+  .command(ListCommand)
+  .command(SetCommand)
   .strict()
 
 try {

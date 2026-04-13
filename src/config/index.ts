@@ -1,0 +1,54 @@
+import os from "os"
+import { join } from "path"
+import bun from "bun"
+import { CONFIGURATIONS } from "./constants"
+
+export function useConfig() {
+  const path = join(os.homedir(), ".config", "ghostty", "config")
+
+  async function get() {
+    const file = await bun.file(path)
+    if (!(await file.exists())) {
+      throw new Error("No ghostty config found")
+    }
+    const content = await file.text()
+    const configurations = content
+      .split("\n")
+      .filter(Boolean)
+      .filter((line) => !line.startsWith("#"))
+      .map((config) => {
+        const [key, value] = config
+          .split("=")
+          .map((c) => c.trim())
+          .filter(Boolean)
+
+        return { key, value }
+      })
+
+    return configurations
+  }
+
+  async function exists(key: string) {
+    const keys = CONFIGURATIONS.map((c) => c.key)
+    return keys.some((c) => c === key)
+  }
+
+  async function set(key: string, value: string) {
+    if (!(await exists(key))) {
+      throw new Error(`Invalid configuration key: ${key}`)
+    }
+    const file = await bun.file(path)
+    if (!(await file.exists())) {
+      await file.write("")
+    }
+    const content = await file.text()
+    await file.write(content + `\n${key} = ${value}`)
+  }
+
+  return {
+    path,
+    get,
+    set,
+    exists,
+  }
+}

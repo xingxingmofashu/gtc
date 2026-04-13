@@ -1,5 +1,6 @@
 {
   "name": "ghostty-config",
+  "description": "",
   "type": "module",
   "private": true,
   "version": "0.1.0",
@@ -8,6 +9,7 @@
     "typecheck": "bunx tsc --noEmit"
   },
   "dependencies": {
+    "@clack/prompts": "^1.2.0",
     "yargs": "^18.0.0"
   },
   "devDependencies": {
