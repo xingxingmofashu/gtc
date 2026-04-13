@@ -1,11 +1,15 @@
 {
-  "name": "ghostty-config",
+  "name": "gtc",
   "description": "ghostty configuration CLI tool",
   "type": "module",
   "private": true,
   "version": "0.1.0",
+  "bin": {
+    "gtc": "./bin/gtc"
+  },
   "scripts": {
     "dev": "bun run src/index.ts",
+    "build": "bun run scripts/build.ts",
     "typecheck": "bunx tsc --noEmit"
   },
   "dependencies": {
