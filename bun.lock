@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "ghostty-config",
+      "name": "gtc",
       "dependencies": {
         "@clack/prompts": "^1.2.0",
         "yargs": "^18.0.0",
