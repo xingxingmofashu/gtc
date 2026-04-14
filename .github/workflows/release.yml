@@ -42,15 +42,6 @@ jobs:
             fi
           done
 
-      - name: Package Windows artifacts
-        run: |
-          cd ./dist
-          for dir in gtc-windows-*; do
-            if [ -d "$dir" ]; then
-              zip -r "${dir}.zip" "$dir"
-            fi
-          done
-
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
