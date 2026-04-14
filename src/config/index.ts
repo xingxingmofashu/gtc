@@ -6,7 +6,7 @@ import { CONFIGURATIONS } from "./constants"
 export function useConfig() {
   const path = join(os.homedir(), ".config", "ghostty", "config")
 
-  async function get() {
+  async function get(key?: string) {
     const file = await bun.file(path)
     if (!(await file.exists())) {
       throw new Error("No ghostty config found")
@@ -21,10 +21,12 @@ export function useConfig() {
           .split("=")
           .map((c) => c.trim())
           .filter(Boolean)
-
-        return { key, value }
+        return { key, value } as { key: string; value: string }
       })
-
+      
+    if (key) {
+      return configurations.filter((c) => c.key.includes(key))
+    }
     return configurations
   }
 
@@ -52,10 +54,26 @@ export function useConfig() {
     }
   }
 
+  async function remove(key: string) {
+    const file = await bun.file(path)
+    if (!(await file.exists())) {
+      throw new Error("No ghostty config found")
+    }
+    const content = (await file.text()).split("\n").filter(Boolean)
+    const index = content.findIndex((line) => line.startsWith(`${key}`))
+    if (index !== -1) {
+      content.splice(index, 1)
+      await file.write(content.join("\n"))
+    } else {
+      throw new Error(`Configuration key not found: ${key}`)
+    }
+  }
+
   return {
     path,
     get,
     set,
+    remove,
     exists,
   }
 }
