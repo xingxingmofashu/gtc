@@ -19,12 +19,6 @@ A CLI tool for managing your [Ghostty](https://ghostty.org) terminal config file
 curl -fsSL https://raw.githubusercontent.com/xingxingmofashu/gtc/main/install | bash
 ```
 
-Installs to `~/.local/bin` by default. Override with `GTC_INSTALL_DIR`:
-
-```sh
-GTC_INSTALL_DIR=/usr/local/bin curl -fsSL https://raw.githubusercontent.com/xingxingmofashu/gtc/main/install | bash
-```
-
 Install a specific version:
 
 ```sh
