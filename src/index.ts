@@ -3,10 +3,11 @@ import { hideBin } from "yargs/helpers"
 import pkg from "../package.json"
 import { ListCommand } from "./cli/commands/list"
 import { SetCommand } from "./cli/commands/set"
+import { RemoveCommand } from "./cli/commands/remove"
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
-  .scriptName("gc")
+  .scriptName("gtc")
   .wrap(yargs().terminalWidth())
   .help("help", "show help")
   .alias("h", ["help"])
@@ -14,6 +15,7 @@ const cli = yargs(hideBin(process.argv))
   .alias("v", ["version"])
   .command(ListCommand)
   .command(SetCommand)
+  .command(RemoveCommand)
   .strict()
 
 try {
