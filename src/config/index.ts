@@ -4,6 +4,8 @@ import bun from "bun"
 import { CONFIGURATIONS } from "./constants"
 
 export function useConfig() {
+  const GTC_THEME_API_URL= process.env.GTC_THEME_API_URL || "https://ghostty-style.vercel.app/api/configs"
+
   const path = join(os.homedir(), ".config", "ghostty", "config")
 
   async function get(key?: string) {
@@ -70,6 +72,7 @@ export function useConfig() {
   }
 
   return {
+    GTC_THEME_API_URL,
     path,
     get,
     set,

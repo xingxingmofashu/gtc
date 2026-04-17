@@ -37,6 +37,7 @@ export const ThemeListCommand = cmd({
   handler: async (argv) => {
     try {
       const { get, install } = useTheme()
+      const { GTC_THEME_API_URL } = useConfig()
       const { configs } = await get({
         q: argv.search,
         sort: argv.sort as ThemeSort,
@@ -46,7 +47,7 @@ export const ThemeListCommand = cmd({
       })
 
       log.info(
-        `Theme source: ${UI.Style.TEXT_DIM}${process.env.GTC_THEME_API_URL || "https://ghostty-style.vercel.app/api/config"}`,
+        `Theme source: ${UI.Style.TEXT_DIM}${GTC_THEME_API_URL}${UI.Style.TEXT_END}`,
       )
 
       const { id, isInstall, use } = await group({

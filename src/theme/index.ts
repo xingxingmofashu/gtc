@@ -3,6 +3,7 @@ import { $fetch } from "ofetch"
 import os from "node:os"
 import { join } from "node:path"
 import { readdir } from "node:fs/promises"
+import { useConfig } from "../config"
 
 export enum ThemeSort {
   Popular = "popular",
@@ -60,15 +61,14 @@ export interface ThemeResponse {
 export function useTheme() {
   const themeDir = join(os.homedir(), ".config", "ghostty", "themes")
 
-  const baseUrl = process.env.GTC_THEME_API_URL || "https://ghostty-style.vercel.app/api/config"
-
   async function get(params?: ThemeRequest) {
+    const { GTC_THEME_API_URL } = useConfig()
     const query = defu(params, {
       sort: ThemeSort.Popular,
       page: 1,
     })
 
-    return await $fetch<ThemeResponse>(baseUrl, {
+    return await $fetch<ThemeResponse>(GTC_THEME_API_URL, {
       method: "GET",
       query,
     })
