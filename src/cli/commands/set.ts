@@ -3,6 +3,7 @@ import { log, autocomplete, group, type Option, intro, outro, text } from "@clac
 import { useConfig } from "../../config"
 import { CONFIGURATIONS } from "../../config/constants"
 import { UI } from "../utils/ui"
+import { useTheme } from "../../theme"
 
 export const SetCommand = cmd({
   command: "set",
@@ -19,16 +20,31 @@ export const SetCommand = cmd({
               hint: c.href,
             })) as Option<string>[],
           }),
-        value: ({ results }) =>
-          text({
+        value: async ({ results }) => {
+          if (results.key === "theme") {
+            const { local } = useTheme()
+            const themes = await local()
+            return autocomplete({
+              message: "Select a theme to set",
+              options: themes.map((t) => ({
+                value: t,
+                label: t,
+              })) as Option<string>[],
+            })
+          }
+          return text({
             message: "Set the configuration value",
             placeholder: results.key?.replace(/@.+$/, "").toLowerCase() ?? "",
-          }),
+          })
+        },
       })
 
       const { set } = useConfig()
       await set(key, value)
-      log.success(`Configuration ${UI.Style.TEXT_HIGHLIGHT}${key}${UI.Style.TEXT_END} set to ${UI.Style.TEXT_SUCCESS}${value}${UI.Style.TEXT_END}`)
+
+      log.success(
+        `Configuration ${UI.Style.TEXT_HIGHLIGHT}${key}${UI.Style.TEXT_END} set to ${UI.Style.TEXT_SUCCESS}${value}${UI.Style.TEXT_END}, reload Ghostty to apply the changes.`,
+      )
     } catch (error) {
       log.error(`${error instanceof Error ? error.message : "An unknown error occurred"}`)
     }

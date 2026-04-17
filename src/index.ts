@@ -4,6 +4,7 @@ import pkg from "../package.json"
 import { ListCommand } from "./cli/commands/list"
 import { SetCommand } from "./cli/commands/set"
 import { RemoveCommand } from "./cli/commands/remove"
+import { ThemeCommand } from "./cli/commands/theme"
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
@@ -16,6 +17,7 @@ const cli = yargs(hideBin(process.argv))
   .command(ListCommand)
   .command(SetCommand)
   .command(RemoveCommand)
+  .command(ThemeCommand)
   .strict()
 
 try {
