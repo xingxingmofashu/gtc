@@ -1,10 +1,8 @@
 import { cmd } from "../../utils/cmd"
 import { useTheme } from "../../../theme"
-import { autocomplete, log, outro, type Option } from "@clack/prompts"
+import { intro, log, outro } from "@clack/prompts"
 import { useConfig } from "../../../config"
 import { UI } from "../../utils/ui"
-import clipboardy from "clipboardy"
-import pkg from "../../../../package.json"
 
 export const ThemeListCommand = cmd({
   command: "list",
@@ -12,25 +10,15 @@ export const ThemeListCommand = cmd({
   describe: `list themes`,
   handler: async () => {
     try {
-      const { list } = useTheme()
-      const { GTC_THEME_BASE_URL } = useConfig()
-      const themes = await list()
+      const { local } = useTheme()
+      const { GHOSTTY_THEME_DIR } = useConfig()
+      const themes = await local()
 
-      log.info(`Theme source: ${UI.Style.TEXT_DIM}${GTC_THEME_BASE_URL}`)
-      const theme = await autocomplete({
-        message: "Select a theme to install",
-        options: themes.map((t) => ({
-          value: t.slug,
-          label: t.title,
-        })) as Option<string>[],
-      })
-
-      if (theme && typeof theme === "string") {
-        await clipboardy.write(theme)
+      intro(`Theme source: ${UI.Text.dim(GHOSTTY_THEME_DIR)}`)
+      for (const theme of themes) {
+        log.info(`${UI.Text.highlight(theme.title)} ${UI.Text.dim(theme.description ?? "")}`)
       }
-      outro(
-        `Theme ${UI.Style.TEXT_SUCCESS}${theme.toString()}${UI.Style.TEXT_END} copied to clipboard, run ${UI.Style.TEXT_INFO_BOLD}${pkg.name} theme install ${theme.toString()}${UI.Style.TEXT_END} to install it.`,
-      )
+      outro(`${UI.Text.highlightBold(themes.length.toString())} theme(s) found.`)
     } catch (error) {
       log.error(`${error instanceof Error ? error.message : "An unknown error occurred"}`)
     }
