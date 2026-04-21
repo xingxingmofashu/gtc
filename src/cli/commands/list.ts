@@ -15,10 +15,10 @@ export const ListCommand = cmd({
     }),
   handler: async (args) => {
     try {
-      const { get, path } = await useConfig()
+      const { get, GHOSTTY_CONFIG_PATH } = await useConfig()
       const configurations = await get(args.search)
 
-      intro(`Ghostty Configurations ${UI.Style.TEXT_DIM}${path}`)
+      intro(`Ghostty Configurations ${UI.Style.TEXT_DIM}${GHOSTTY_CONFIG_PATH}`)
       for (const { key, value } of configurations) {
         log.info(`${key} ${UI.Style.TEXT_DIM} ${UI.Style.TEXT_HIGHLIGHT}${value}`)
       }
