@@ -98,9 +98,20 @@ export function useTheme() {
     await file.write(rawConfig)
   }
 
-  function local() {
+  async function local() {
     const { GHOSTTY_THEME_DIR } = useConfig()
-    return readdir(GHOSTTY_THEME_DIR)
+    const themes = await readdir(GHOSTTY_THEME_DIR)
+    const availableThemes = await list()
+    return availableThemes.filter((t) => themes.includes(t.slug))
+  }
+
+  async function remove(name: string) {
+    const { GHOSTTY_THEME_DIR } = useConfig()
+    const file = Bun.file(join(GHOSTTY_THEME_DIR, name))
+    if (!(await file.exists())) {
+      throw new Error(`Theme "${name}" does not exist`)
+    }
+    return file.delete()
   }
 
   return {
@@ -108,5 +119,6 @@ export function useTheme() {
     list,
     install,
     local,
+    remove,
   }
 }

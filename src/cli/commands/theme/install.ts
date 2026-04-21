@@ -1,27 +1,38 @@
-import { log } from "@clack/prompts"
+import { autocomplete, log, type Option } from "@clack/prompts"
 import { useTheme } from "../../../theme"
 import { cmd } from "../../utils/cmd"
 import { UI } from "../../utils/ui"
+import { useConfig } from "../../../config"
 
 export const ThemeInstallCommand = cmd({
-  command: "install <slug>",
-  describe: "Install a theme by slug",
-  builder: (yargs) =>
-    yargs.positional("slug", {
-      type: "string",
-      demandOption: true,
-      description: "The slug of the theme to install",
-    }),
-  handler: async (argv) => {
+  command: "install",
+  describe: "Install a theme",
+  handler: async () => {
     try {
-      const { install, get } = useTheme()
-      const theme = await get(argv.slug)
+      const { install, list, get } = useTheme()
+      const { GTC_THEME_BASE_URL } = useConfig()
+      const themes = await list()
+
+      log.info(`Theme source: ${UI.Text.dim(GTC_THEME_BASE_URL)}`)
+      const name = await autocomplete({
+        message: "Select a theme to install",
+        options: themes.map((t) => ({
+          value: t.slug,
+          label: t.title,
+          hint: t.description,
+        })) as Option<string>[],
+      })
+      if (typeof name === "symbol") {
+        log.error("Operation cancelled")
+        return
+      }
+      const theme = await get(name)
       if (!theme) {
-        log.error(`Theme with slug ${UI.Style.TEXT_HIGHLIGHT}${argv.slug}${UI.Style.TEXT_END} not found.`)
+        log.error(`Theme "${name}" not found`)
         return
       }
       await install(theme)
-      log.success(`Theme ${UI.Style.TEXT_HIGHLIGHT}${argv.slug}${UI.Style.TEXT_END} installed successfully.`)
+      log.success(`Theme ${UI.Text.highlight(theme.title)} installed successfully.`)
     } catch (error) {
       log.error(`Error installing theme: ${(error as Error).message}`)
     }

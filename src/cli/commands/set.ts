@@ -27,8 +27,9 @@ export const SetCommand = cmd({
             return autocomplete({
               message: "Select a theme to set",
               options: themes.map((t) => ({
-                value: t,
-                label: t,
+                value: t.slug,
+                label: t.title,
+                hint: t.description,
               })) as Option<string>[],
             })
           }

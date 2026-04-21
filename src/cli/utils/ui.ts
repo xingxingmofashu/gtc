@@ -21,4 +21,49 @@ export namespace UI {
     TEXT_END: "\x1b[0m",
   }
 
+  export class Text{
+    static highlight(text: string) {
+      return `${Style.TEXT_HIGHLIGHT}${text}${Style.TEXT_END}`
+    }
+    static highlightBold(text: string) {
+      return `${Style.TEXT_HIGHLIGHT_BOLD}${text}${Style.TEXT_END}`
+    }
+    static dim(text: string) {
+      return `${Style.TEXT_DIM}${text}${Style.TEXT_END}`
+    }
+    static dimBold(text: string) {
+      return `${Style.TEXT_DIM_BOLD}${text}${Style.TEXT_END}`
+    }
+    static normal(text: string) {
+      return `${Style.TEXT_NORMAL}${text}${Style.TEXT_END}`
+    }
+    static normalBold(text: string) {
+      return `${Style.TEXT_NORMAL_BOLD}${text}${Style.TEXT_END}`
+    }
+    static warning(text: string) {
+      return `${Style.TEXT_WARNING}${text}${Style.TEXT_END}`
+    }
+    static warningBold(text: string) {
+      return `${Style.TEXT_WARNING_BOLD}${text}${Style.TEXT_END}`
+    }
+    static danger(text: string) {
+      return `${Style.TEXT_DANGER}${text}${Style.TEXT_END}`
+    }
+    static dangerBold(text: string) {
+      return `${Style.TEXT_DANGER_BOLD}${text}${Style.TEXT_END}`
+    }
+    static success(text: string) {
+      return `${Style.TEXT_SUCCESS}${text}${Style.TEXT_END}`
+    }
+    static successBold(text: string) {
+      return `${Style.TEXT_SUCCESS_BOLD}${text}${Style.TEXT_END}`
+    }
+    static info(text: string) {
+      return `${Style.TEXT_INFO}${text}${Style.TEXT_END}`
+    }
+    static infoBold(text: string) {
+      return `${Style.TEXT_INFO_BOLD}${text}${Style.TEXT_END}`
+    }
+  }
+
 }
