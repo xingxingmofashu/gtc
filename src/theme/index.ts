@@ -1,6 +1,4 @@
-import { defu } from "defu"
 import { $fetch } from "ofetch"
-import os from "node:os"
 import { join } from "node:path"
 import { readdir } from "node:fs/promises"
 import { useConfig } from "../config"
@@ -13,7 +11,6 @@ export enum ThemeSort {
 
 export interface ThemeRequest {
   sort?: ThemeSort
-  page?: number
   tag?: string
   dark?: boolean
   q?: string
@@ -59,33 +56,56 @@ export interface ThemeResponse {
 }
 
 export function useTheme() {
-  const themeDir = join(os.homedir(), ".config", "ghostty", "themes")
+  async function list() {
+    const CONFIGS_PER_PAGE = 24
+    const { GTC_THEME_API_URL, GTC_THEME_CACHE_PATH } = useConfig()
+    const themeCacheFile = Bun.file(GTC_THEME_CACHE_PATH)
+    if ((await themeCacheFile.exists()) && Date.now() - themeCacheFile.lastModified < 1000 * 60 * 60) {
+      return (await themeCacheFile.json()) as ThemeConfig[]
+    }
 
-  async function get(params?: ThemeRequest) {
-    const { GTC_THEME_API_URL } = useConfig()
-    const query = defu(params, {
-      sort: ThemeSort.Popular,
+    const query = {
       page: 1,
-    })
-
-    return await $fetch<ThemeResponse>(GTC_THEME_API_URL, {
+    }
+    let promises: Promise<ThemeResponse>[] = []
+    const { total } = await $fetch<ThemeResponse>(GTC_THEME_API_URL, {
       method: "GET",
       query,
     })
+    while (query.page * CONFIGS_PER_PAGE < total) {
+      promises.push(
+        $fetch<ThemeResponse>(GTC_THEME_API_URL, {
+          method: "GET",
+          query,
+        }),
+      )
+      query.page++
+    }
+    const responses = (await Promise.all(promises)).flatMap((r) => r.configs)
+    await themeCacheFile.write(JSON.stringify(responses, null, 2))
+    return responses
+  }
+
+  async function get(slug: string) {
+    const themes = await list()
+    return themes.find((t) => t.slug === slug)
   }
 
   async function install(theme: ThemeConfig) {
+    const { GHOSTTY_THEME_DIR } = useConfig()
     const rawConfig = theme.rawConfig
-    const file = Bun.file(join(themeDir, theme.slug))
+    const file = Bun.file(join(GHOSTTY_THEME_DIR, theme.slug))
     await file.write(rawConfig)
   }
 
   function local() {
-    return readdir(themeDir)
+    const { GHOSTTY_THEME_DIR } = useConfig()
+    return readdir(GHOSTTY_THEME_DIR)
   }
 
   return {
     get,
+    list,
     install,
     local,
   }
