@@ -21,11 +21,11 @@ curl -fsSL https://raw.githubusercontent.com/xingxingmofashu/gtc/main/install | 
 
 ### Supported platforms
 
-| Platform | Arch |
-|---|---|
-| macOS | arm64, x64 |
+| Platform      | Arch                     |
+| ------------- | ------------------------ |
+| macOS         | arm64, x64               |
 | Linux (glibc) | arm64, x64, x64-baseline |
-| Linux (musl) | arm64, x64, x64-baseline |
+| Linux (musl)  | arm64, x64, x64-baseline |
 
 Windows is not supported.
 
@@ -44,8 +44,8 @@ gtc ls               # alias
 
 **Options**
 
-| Flag | Description |
-|---|---|
+| Flag             | Description                                      |
+| ---------------- | ------------------------------------------------ |
 | `--search <key>` | Filter entries by key substring (case-sensitive) |
 
 **Examples**
@@ -88,9 +88,9 @@ gtc rm <name>        # alias
 
 **Arguments**
 
-| Argument | Description |
-|---|---|
-| `name` | The exact config key to remove (required) |
+| Argument | Description                               |
+| -------- | ----------------------------------------- |
+| `name`   | The exact config key to remove (required) |
 
 **Examples**
 
@@ -138,11 +138,11 @@ If Ghostty adds new config options they must be added to `src/config/constants.t
 
 ## Environment variables
 
-| Variable | Description |
-|---|---|
-| `GTC_BIN_PATH` | Override the path to the gtc binary used by the `bin/gtc` shim |
+| Variable             | Description                                                                               |
+| -------------------- | ----------------------------------------------------------------------------------------- |
+| `GTC_BIN_PATH`       | Override the path to the gtc binary used by the `bin/gtc` shim                            |
 | `GTC_THEME_BASE_URL` | Override the base URL for the theme service (default: `https://ghostty-style.vercel.app`) |
-| `GTC_THEME_API_URL` | Override the theme API endpoint (default: `https://ghostty-style.vercel.app/api/configs`) |
+| `GTC_THEME_API_URL`  | Override the theme API endpoint (default: `https://ghostty-style.vercel.app/api/configs`) |
 
 ---
 
@@ -173,16 +173,16 @@ bun run src/index.ts theme
 
 `bun run build` produces 8 self-contained native binaries under `dist/`:
 
-| Target directory | OS | Arch | ABI |
-|---|---|---|---|
-| `gtc-linux-arm64` | Linux | arm64 | glibc |
-| `gtc-linux-x64` | Linux | x64 | glibc |
-| `gtc-linux-x64-baseline` | Linux | x64 (no AVX2) | glibc |
-| `gtc-linux-arm64-musl` | Linux | arm64 | musl |
-| `gtc-linux-x64-musl` | Linux | x64 | musl |
-| `gtc-linux-x64-baseline-musl` | Linux | x64 (no AVX2) | musl |
-| `gtc-darwin-arm64` | macOS | arm64 (Apple Silicon) | — |
-| `gtc-darwin-x64` | macOS | x64 (Intel) | — |
+| Target directory              | OS    | Arch                  | ABI   |
+| ----------------------------- | ----- | --------------------- | ----- |
+| `gtc-linux-arm64`             | Linux | arm64                 | glibc |
+| `gtc-linux-x64`               | Linux | x64                   | glibc |
+| `gtc-linux-x64-baseline`      | Linux | x64 (no AVX2)         | glibc |
+| `gtc-linux-arm64-musl`        | Linux | arm64                 | musl  |
+| `gtc-linux-x64-musl`          | Linux | x64                   | musl  |
+| `gtc-linux-x64-baseline-musl` | Linux | x64 (no AVX2)         | musl  |
+| `gtc-darwin-arm64`            | macOS | arm64 (Apple Silicon) | —     |
+| `gtc-darwin-x64`              | macOS | x64 (Intel)           | —     |
 
 Each target directory contains `bin/gtc` (the binary) and a `package.json` with `os`/`cpu` fields for optional package managers to select the correct variant.
 
