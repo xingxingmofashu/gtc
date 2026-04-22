@@ -1,6 +1,6 @@
 /**
  * UI utilities for the CLI application.
- * @link https://github.com/ 
+ * @link https://github.com/
  */
 export namespace UI {
   export const Style = {
@@ -21,7 +21,7 @@ export namespace UI {
     TEXT_END: "\x1b[0m",
   }
 
-  export class Text{
+  export class Text {
     static highlight(text: string) {
       return `${Style.TEXT_HIGHLIGHT}${text}${Style.TEXT_END}`
     }
@@ -65,5 +65,4 @@ export namespace UI {
       return `${Style.TEXT_INFO_BOLD}${text}${Style.TEXT_END}`
     }
   }
-
 }

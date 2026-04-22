@@ -60,7 +60,10 @@ export function useTheme() {
     const CONFIGS_PER_PAGE = 24
     const { GTC_THEME_API_URL, GTC_THEME_CACHE_PATH } = useConfig()
     const themeCacheFile = Bun.file(GTC_THEME_CACHE_PATH)
-    if ((await themeCacheFile.exists()) && Date.now() - themeCacheFile.lastModified < 1000 * 60 * 60) {
+    if (
+      (await themeCacheFile.exists()) &&
+      Date.now() - themeCacheFile.lastModified < 1000 * 60 * 60
+    ) {
       return (await themeCacheFile.json()) as ThemeConfig[]
     }
 

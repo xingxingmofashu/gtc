@@ -1,5 +1,5 @@
 import { cmd } from "../utils/cmd"
-import { log, autocomplete, group, type Option, intro, outro, text } from "@clack/prompts"
+import { log, autocomplete, group, type Option, intro, text } from "@clack/prompts"
 import { useConfig } from "../../config"
 import { CONFIGURATIONS } from "../../config/constants"
 import { UI } from "../utils/ui"

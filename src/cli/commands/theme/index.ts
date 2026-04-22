@@ -7,6 +7,10 @@ export const ThemeCommand = cmd({
   command: "theme",
   describe: "Manage themes",
   builder: (yargs) =>
-    yargs.command(ThemeListCommand).command(ThemeInstallCommand).command(ThemeRemoveCommand).demandCommand(),
+    yargs
+      .command(ThemeListCommand)
+      .command(ThemeInstallCommand)
+      .command(ThemeRemoveCommand)
+      .demandCommand(),
   handler: async () => {},
 })
