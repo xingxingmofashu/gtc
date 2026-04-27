@@ -1,6 +1,6 @@
 /**
  * UI utilities for the CLI application.
- * @link https://github.com/
+ * @link https://github.com/anomalyco/opencode/blob/dev/packages/opencode/src/cli/ui.ts
  */
 export namespace UI {
   export const Style = {

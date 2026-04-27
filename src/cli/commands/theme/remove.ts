@@ -4,6 +4,7 @@ import { cmd } from "../../utils/cmd"
 
 export const ThemeRemoveCommand = cmd({
   command: "remove",
+  aliases: ["rm"],
   describe: "Remove a theme",
   handler: async () => {
     try {

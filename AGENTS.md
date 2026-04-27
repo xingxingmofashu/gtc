@@ -1,53 +1,58 @@
 # AGENTS.md
 
-## What this repo is
+## Repo purpose
 
-`gtc` — a Bun CLI tool for managing the Ghostty terminal emulator config file (`~/.config/ghostty/config`). Provides `list`, `set`, and `remove` commands. Built into self-contained native binaries for 8 platform targets via `Bun.build({ compile: true })`.
+`gtc` is a Bun CLI for Ghostty config management. Real command set is `list`, `set`, `remove`, and `theme` subcommands (`theme list|install|remove`).
 
-## Developer commands
+## Commands that matter
 
 ```bash
-bun install                       # install deps
-bun run dev                       # run from source (no build step needed)
-bun run typecheck                 # tsc --noEmit
-bun run build                     # cross-compile all 8 platform targets (wipes dist/ first)
-bun run build -- --single         # build only the host platform (fast)
-bunx prettier --write .           # format (no npm script exists for this)
+bun install
+bun run dev
+bun run lint
+bun run typecheck
+bun run fmt
+bun run fmt:fix
+bun run build
+bun run build -- --single
+bun run build -- --single --baseline
 ```
 
-No test suite. No linter. Manual verification only:
+- Pre-commit hook runs: `bun run lint && bun run typecheck && bun run fmt` (same order).
+- `typecheck` is **not** `tsc`; it runs `oxlint --type-aware`.
+- There is no test suite (`bun test` has nothing to run).
+
+## Verification shortcuts
 
 ```bash
 bun run src/index.ts list
 bun run src/index.ts list --search font
 bun run src/index.ts set
 bun run src/index.ts remove font-size
+bun run src/index.ts theme list
 ```
 
-## Key gotchas
+## High-signal gotchas
 
-- **No tests.** `bun test` will find nothing. Do not look for test files.
-- **`bun run build` always runs `rm -rf dist` first.** Every build is a full clean rebuild. Use `--single` to avoid rebuilding all 8 targets.
-- **`dist/` is committed to git** despite `.gitignore` listing it. Newly generated dist files may not be staged automatically — force-add if needed.
-- **No semicolons.** Prettier config (`package.json` → `"prettier"`) sets `"semi": false`. Line width is 120.
-- **`gtc set` is interactive-only.** Uses `@clack/prompts` autocomplete — cannot be scripted with positional args.
-- **Config key validation uses a static list.** `src/config/constants.ts` has a hardcoded `CONFIGURATIONS` array (~180 entries). New Ghostty config keys must be manually added there or `set` will reject them.
-- **`bin/gtc` shim is CJS** (`require()`), intentionally, for npm bin compatibility. The rest of the project is ESM (`"type": "module"`).
-- **Build target naming:** `Bun.build()` receives `bun-<os>-<arch>` strings; output directories are named `gtc-<os>-<arch>`. The substitution in `scripts/build.ts` is `name.replace(pkg.name, "bun")` (replaces `gtc` with `bun`).
-- **No Windows binaries are produced.** The `allTargets` array in `scripts/build.ts` contains no `win32` entries.
-- **TypeScript 6.0.2** (bleeding-edge). Some type behaviors differ from TS 5.x.
+- `scripts/build.ts` always does `rm -rf dist` before building.
+- `--single` builds only the current OS/arch and skips musl/baseline variants by default; add `--baseline` if you explicitly need baseline on host.
+- Published build targets are Linux + macOS only (no Windows target in `allTargets`).
+- `gtc set` is interactive-only via `@clack/prompts`; no positional key/value mode.
+- Valid config keys are a static allowlist in `src/config/constants.ts`; new Ghostty keys must be added there.
+- Config path is hardcoded to `~/.config/ghostty/config` in `src/config/index.ts`.
+- Theme directory is hardcoded to `~/.config/ghostty/themes`; theme commands depend on that path existing.
 
-## Architecture
+## Architecture map
 
-```
-src/index.ts              # CLI entrypoint (yargs + top-level await)
-src/cli/commands/         # list.ts, set.ts, remove.ts
-src/cli/utils/            # cmd.ts (yargs type wrapper), ui.ts (ANSI colors)
-src/config/index.ts       # useConfig() — reads/writes ~/.config/ghostty/config
-src/config/constants.ts   # CONFIGURATIONS: all valid Ghostty keys + doc URLs
-scripts/build.ts          # Bun cross-compile script
-bin/gtc                   # CJS shim for npm distribution
-dist/                     # Compiled binaries (committed)
-```
+- `src/index.ts`: yargs entrypoint, command wiring, global error handling.
+- `src/config/index.ts`: core file I/O + env-controlled theme API/cache paths.
+- `src/theme/index.ts`: remote theme fetch/cache (`~/.config/gtc/cache/themes.json`) + local theme install/remove.
+- `src/cli/commands/*.ts`: command handlers; `src/cli/commands/theme/index.ts` requires a subcommand (`.demandCommand()`).
+- `scripts/build.ts`: Bun cross-compile pipeline using `Bun.build({ compile: true })`.
+- `bin/gtc`: intentionally CJS shim (`require`) that resolves platform binary packages.
 
-Config file path is hardcoded — no override flag exists.
+## Env vars used by runtime
+
+- `GTC_BIN_PATH`: force `bin/gtc` to execute a specific binary.
+- `GTC_THEME_BASE_URL`: override theme site base URL.
+- `GTC_THEME_API_URL`: override theme API endpoint.

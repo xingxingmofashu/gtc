@@ -2,8 +2,6 @@ import yargs from "yargs"
 import { hideBin } from "yargs/helpers"
 import pkg from "../package.json"
 import { ListCommand } from "./cli/commands/list"
-import { SetCommand } from "./cli/commands/set"
-import { RemoveCommand } from "./cli/commands/remove"
 import { ThemeCommand } from "./cli/commands/theme"
 
 const cli = yargs(hideBin(process.argv))
@@ -15,8 +13,6 @@ const cli = yargs(hideBin(process.argv))
   .version("version", pkg.version)
   .alias("v", ["version"])
   .command(ListCommand)
-  .command(SetCommand)
-  .command(RemoveCommand)
   .command(ThemeCommand)
   .strict()
 

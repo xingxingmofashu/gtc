@@ -9,14 +9,15 @@ export const ListCommand = cmd({
   aliases: ["ls"],
   describe: "List all the ghostty configurations",
   builder: (yargs) =>
-    yargs.option("search", {
+    yargs.option("query", {
       type: "string",
+      alias: ["q"],
       describe: "Search for a specific configuration by key",
     }),
   handler: async (args) => {
     try {
       const { get, GHOSTTY_CONFIG_PATH } = useConfig()
-      const configurations = await get(args.search)
+      const configurations = await get(args.query)
 
       intro(`Ghostty Configurations ${UI.Style.TEXT_DIM}${GHOSTTY_CONFIG_PATH}`)
       for (const { key, value } of configurations) {
