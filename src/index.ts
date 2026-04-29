@@ -3,6 +3,8 @@ import { hideBin } from "yargs/helpers"
 import pkg from "../package.json"
 import { ListCommand } from "./cli/commands/list"
 import { ThemeCommand } from "./cli/commands/theme"
+import { FontCommand } from "./cli/commands/font"
+import { RemoveCommand } from "./cli/commands/remove"
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
@@ -13,7 +15,9 @@ const cli = yargs(hideBin(process.argv))
   .version("version", pkg.version)
   .alias("v", ["version"])
   .command(ListCommand)
+  .command(RemoveCommand)
   .command(ThemeCommand)
+  .command(FontCommand)
   .strict()
 
 try {

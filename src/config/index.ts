@@ -2,6 +2,8 @@ import os from "os"
 import { join } from "path"
 import { CONFIGURATIONS } from "./constants"
 
+export type GhosttyConfigKeys = (typeof CONFIGURATIONS)[number]["key"]
+
 export function useConfig() {
   const GTC_THEME_BASE_URL = process.env.GTC_THEME_BASE_URL || "https://ghostty-style.vercel.app"
   const GTC_THEME_API_URL =
@@ -12,6 +14,7 @@ export function useConfig() {
 
   const GTC_DIR = join(os.homedir(), ".config", "gtc")
   const GTC_THEME_CACHE_PATH = join(GTC_DIR, "cache", "themes.json")
+  const GTC_FONT_CACHE_PATH = join(GTC_DIR, "cache", "fonts.json")
 
   async function get(key?: string) {
     const file = Bun.file(GHOSTTY_CONFIG_PATH)
@@ -42,7 +45,7 @@ export function useConfig() {
     return keys.some((c) => c === key)
   }
 
-  async function set(key: string, value: string) {
+  async function set(key: GhosttyConfigKeys, value: string) {
     if (!(await exists(key))) {
       throw new Error(`Invalid configuration key: ${key}`)
     }
@@ -82,6 +85,7 @@ export function useConfig() {
     GHOSTTY_THEME_DIR,
     GHOSTTY_CONFIG_PATH,
     GTC_THEME_CACHE_PATH,
+    GTC_FONT_CACHE_PATH,
     get,
     set,
     remove,

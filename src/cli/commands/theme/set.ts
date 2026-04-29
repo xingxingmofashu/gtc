@@ -1,5 +1,5 @@
 import { cmd } from "../../utils/cmd"
-import { useTheme } from "../../../theme"
+import { useTheme, type ThemeConfig } from "../../../theme"
 import { autocomplete, log, type Option } from "@clack/prompts"
 import { UI } from "../../utils/ui"
 import { useConfig } from "../../../config"
@@ -15,10 +15,10 @@ export const ThemeSetCommand = cmd({
       const theme = await autocomplete({
         message: "Select a theme to set",
         options: themes.map((t) => ({
-          value: t.slug,
+          value: t,
           label: t.title,
           hint: t.description,
-        })) as Option<string>[],
+        })) as Option<ThemeConfig>[],
       })
 
       if (typeof theme === "symbol") {
@@ -26,8 +26,8 @@ export const ThemeSetCommand = cmd({
         return
       }
 
-      await set("theme", theme)
-      log.success(`Theme ${UI.Text.highlight(theme)} set successfully.`)
+      await set("theme", theme.slug)
+      log.success(`Theme ${UI.Text.highlight(theme.title)} set successfully.`)
     } catch (error) {
       log.error(`Error setting theme: ${(error as Error).message}`)
     }
