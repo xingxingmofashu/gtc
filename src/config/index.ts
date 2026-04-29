@@ -72,7 +72,12 @@ export function useConfig() {
     const content = (await file.text()).split("\n").filter(Boolean)
     const index = content.findIndex((line) => line.startsWith(`${key}`))
     if (index !== -1) {
-      content.splice(index, 1)
+      // Count consecutive comment lines immediately above the config line
+      let commentStart = index
+      while (commentStart > 0 && content[commentStart - 1]?.startsWith("#")) {
+        commentStart--
+      }
+      content.splice(commentStart, index - commentStart + 1)
       await file.write(content.join("\n"))
     } else {
       throw new Error(`Configuration key not found: ${key}`)
