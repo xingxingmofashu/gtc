@@ -1,8 +1,8 @@
 import { log } from "@clack/prompts"
-import { useConfig } from "../../config"
-import { cmd } from "../utils/cmd"
+import { useConfig } from "../../../config"
+import { cmd } from "../../utils/cmd"
 
-export const RemoveCommand = cmd({
+export const ConfigRemoveCommand = cmd({
   command: "remove <name>",
   aliases: ["rm"],
   describe: "Remove a config from the ghostty",

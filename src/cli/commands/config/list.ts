@@ -1,10 +1,10 @@
-import { cmd } from "../utils/cmd"
+import { cmd } from "../../utils/cmd"
 import { intro, log, outro } from "@clack/prompts"
-import { UI } from "../utils/ui"
-import { useConfig } from "../../config"
-import pkg from "../../../package.json"
+import { UI } from "../../utils/ui"
+import { useConfig } from "../../../config"
+import pkg from "../../../../package.json"
 
-export const ListCommand = cmd({
+export const ConfigListCommand = cmd({
   command: "list",
   aliases: ["ls"],
   describe: "List all the ghostty configurations",

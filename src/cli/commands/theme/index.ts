@@ -6,7 +6,7 @@ import { ThemeRemoveCommand } from "./remove"
 
 export const ThemeCommand = cmd({
   command: "theme",
-  describe: "Manage themes",
+  describe: "Manage ghostty themes",
   builder: (yargs) =>
     yargs
       .command(ThemeListCommand)
