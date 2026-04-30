@@ -1,29 +1,23 @@
-import { intro, log, outro } from "@clack/prompts"
 import { useFont } from "../../../font"
 import { cmd } from "../../utils/cmd"
+import { intro, log, outro } from "@clack/prompts"
 import { UI } from "../../utils/ui"
 
 export const FontListCommand = cmd({
   command: "list",
   aliases: ["ls"],
   describe: "List available fonts",
-  builder: (yargs) =>
-    yargs.option("force", {
-      type: "boolean",
-      description: "Force refresh the font list",
-      default: false,
-    }),
-  handler: async (args) => {
+  handler: async (_args) => {
     const { list } = useFont()
-    const { SPFontsDataType } = await list(args.force)
+    const fonts = await list()
     intro(`Available fonts:`)
-    for (const font of SPFontsDataType.sort((a, b) => a._name.localeCompare(b._name))) {
-      for (const typeface of font.typefaces) {
-        log.info(`${typeface.fullname}`)
+    for (const font of fonts.sort((a, b) => a.family.localeCompare(b.family))) {
+      for (const variant of font.variants) {
+        log.info(variant)
       }
     }
     outro(
-      `Total: ${UI.Text.highlight(SPFontsDataType.reduce((acc, font) => acc + font.typefaces.length, 0).toString())}  fonts.`,
+      `Total: ${UI.Text.highlight(fonts.reduce((acc, font) => acc + font.variants.length, 0).toString())} fonts.`,
     )
   },
 })
