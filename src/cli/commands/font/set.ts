@@ -9,20 +9,22 @@ export const FontSetCommand = cmd({
   handler: async () => {
     const { list } = useFont()
     const { set } = useConfig()
-    const { SPFontsDataType } = await list()
+    const fonts = await list()
     const font = await autocomplete({
       message: "Select a font",
-      options: SPFontsDataType.flatMap((font) => font.typefaces).map((typeface) => ({
-        name: typeface.fullname,
-        value: typeface.fullname,
-        hint: typeface.designer,
-      })),
+      options: fonts.flatMap((f) =>
+        f.variants.map((variant) => ({
+          name: variant,
+          value: variant,
+          hint: f.family,
+        })),
+      ),
     })
     if (typeof font === "symbol") {
       log.error("Operation cancelled")
       return
     }
 
-    await set("font-family", font)
+    await set("font-family", font as string)
   },
 })
