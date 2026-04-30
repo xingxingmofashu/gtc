@@ -6,7 +6,7 @@ import { useConfig } from "../../../config"
 
 export const ThemeSetCommand = cmd({
   command: "set",
-  describe: "Set the current theme",
+  describe: "Set theme",
   handler: async () => {
     try {
       const { local } = useTheme()

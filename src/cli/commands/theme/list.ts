@@ -7,7 +7,7 @@ import { UI } from "../../utils/ui"
 export const ThemeListCommand = cmd({
   command: "list",
   aliases: ["ls"],
-  describe: `list themes`,
+  describe: `list all the local themes`,
   handler: async () => {
     try {
       const { local } = useTheme()
