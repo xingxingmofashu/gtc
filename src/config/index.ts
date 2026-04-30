@@ -1,6 +1,7 @@
 import os from "os"
 import { join } from "path"
 import { CONFIGURATIONS } from "./constants"
+import { $ } from "bun"
 
 export type GhosttyConfigKeys = (typeof CONFIGURATIONS)[number]["key"]
 
@@ -16,7 +17,7 @@ export function useConfig() {
   const GTC_THEME_CACHE_PATH = join(GTC_DIR, "cache", "themes.json")
   const GTC_FONT_CACHE_PATH = join(GTC_DIR, "cache", "fonts.json")
 
-  async function get(key?: string) {
+  async function list(query?: string) {
     const file = Bun.file(GHOSTTY_CONFIG_PATH)
     if (!(await file.exists())) {
       throw new Error("No ghostty config found")
@@ -34,8 +35,8 @@ export function useConfig() {
         return { key, value } as { key: string; value: string }
       })
 
-    if (key) {
-      return configurations.filter((c) => c.key.includes(key))
+    if (query) {
+      return configurations.filter((c) => c.key.includes(query))
     }
     return configurations
   }
@@ -84,6 +85,10 @@ export function useConfig() {
     }
   }
 
+  function validate() {
+    return $`ghostty +validate-config`
+  }
+
   return {
     GTC_THEME_BASE_URL,
     GTC_THEME_API_URL,
@@ -91,9 +96,10 @@ export function useConfig() {
     GHOSTTY_CONFIG_PATH,
     GTC_THEME_CACHE_PATH,
     GTC_FONT_CACHE_PATH,
-    get,
+    list,
     set,
     remove,
     exists,
+    validate,
   }
 }

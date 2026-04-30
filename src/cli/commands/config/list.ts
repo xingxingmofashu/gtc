@@ -6,7 +6,7 @@ import pkg from "../../../../package.json"
 
 export const ConfigListCommand = cmd({
   command: "list",
-  aliases: ["ls"],
+  aliases: ["show", "ls"],
   describe: "List all the ghostty configurations",
   builder: (yargs) =>
     yargs.option("query", {
@@ -16,8 +16,8 @@ export const ConfigListCommand = cmd({
     }),
   handler: async (args) => {
     try {
-      const { get, GHOSTTY_CONFIG_PATH } = useConfig()
-      const configurations = await get(args.query)
+      const { list, GHOSTTY_CONFIG_PATH } = useConfig()
+      const configurations = await list(args.query)
 
       intro(`Ghostty Configurations ${UI.Style.TEXT_DIM}${GHOSTTY_CONFIG_PATH}`)
       for (const { key, value } of configurations) {
