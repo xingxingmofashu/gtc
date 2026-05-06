@@ -9,18 +9,24 @@ export const ConfigListCommand = cmd({
   aliases: ["show", "ls"],
   describe: "List all the ghostty configurations",
   builder: (yargs) =>
-    yargs.option("query", {
-      type: "string",
-      alias: ["q"],
-      describe: "Search for a specific configuration by key",
-    }),
+    yargs
+      .option("query", {
+        type: "string",
+        alias: ["q"],
+        describe: "Search for a specific configuration by key",
+      })
+      .option("global", {
+        type: "boolean",
+        alias: ["g"],
+        describe: "List all configurations including those not set by the user",
+      }),
   handler: async (args) => {
     try {
       const { list, GHOSTTY_CONFIG_PATH } = useConfig()
-      const configurations = await list(args.query)
+      const configurations = await list(args.query, args.global)
 
       intro(`Ghostty Configurations ${UI.Style.TEXT_DIM}${GHOSTTY_CONFIG_PATH}`)
-      for (const { key, value } of configurations) {
+      for (const [key, value] of configurations) {
         log.info(`${UI.Text.normal(key)} ${UI.Text.highlight(value)}`)
       }
       if (configurations.length === 0) {
