@@ -17,26 +17,25 @@ export function useConfig() {
   const GTC_THEME_CACHE_PATH = join(GTC_DIR, "cache", "themes.json")
   const GTC_FONT_CACHE_PATH = join(GTC_DIR, "cache", "fonts.json")
 
-  async function list(query?: string) {
+  async function list(query?: string, global = false) {
     const file = Bun.file(GHOSTTY_CONFIG_PATH)
-    if (!(await file.exists())) {
-      throw new Error("No ghostty config found")
+    if (!(await file.exists()) && !global) {
+      return []
     }
-    const content = await file.text()
+    const content = global ? await file.text() : await $`ghostty +show-config`.text()
     const configurations = content
       .split("\n")
       .filter(Boolean)
       .filter((line) => !line.startsWith("#"))
       .map((config) => {
-        const [key, value] = config
+        return config
           .split("=")
           .map((c) => c.trim())
-          .filter(Boolean)
-        return { key, value } as { key: string; value: string }
+          .filter(Boolean) as [string, string]
       })
 
     if (query) {
-      return configurations.filter((c) => c.key.includes(query))
+      return configurations.filter((c) => c[0].includes(query))
     }
     return configurations
   }

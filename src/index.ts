@@ -4,7 +4,6 @@ import pkg from "../package.json"
 import { ConfigCommand } from "./cli/commands/config"
 import { ThemeCommand } from "./cli/commands/theme"
 import { FontCommand } from "./cli/commands/font"
-import { BackgroundCommand } from "./cli/commands/background"
 
 const cli = yargs(hideBin(process.argv))
   .parserConfiguration({ "populate--": true })
@@ -17,7 +16,6 @@ const cli = yargs(hideBin(process.argv))
   .command(ConfigCommand)
   .command(ThemeCommand)
   .command(FontCommand)
-  .command(BackgroundCommand)
   .strict()
 
 try {
